@@ -1781,7 +1781,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Paste the Web App URL you get from Google Apps Script (see apps-script-reviews.gs)
   // here. Until you do, the review form still works locally in each visitor's
   // own browser, but reviews won't be shared with other visitors.
-  const REVIEWS_API_URL = 'https://script.google.com/macros/s/AKfycbxeNGxRA-j_jAJldUjpHr_LLhJxnYOBdVCDLylJW-JLxxBVrRTYCX-qvSuRctwWYzXY/exec';
+  const REVIEWS_API_URL = 'https://script.google.com/macros/s/AKfycbwKmb9yrgwuq-vOmnfeW9UxJ_ZgL0jCSf5rxGAZvFPgece7U4bJ8DyGui4ro9wrUgA4/exec';
 
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
@@ -1875,8 +1875,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (apiReady) {
     // Load every visitor's reviews from the shared Google Sheet.
     fetch(REVIEWS_API_URL)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
       .then((reviews) => {
+        if (!Array.isArray(reviews)) throw new Error('Respons bukan JSON array (cek deployment/nama tab "Reviews")');
         reviews.forEach((review) => {
           const { slide, dot } = createReviewSlide(review);
           slides.push(slide);
@@ -1884,7 +1888,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         initSlider();
       })
-      .catch(() => { initSlider(); });
+      .catch((err) => {
+        console.error('[Reviews API] Gagal memuat review dari Google Sheet:', err);
+        initSlider();
+      });
   } else {
     initSlider();
   }
@@ -1950,7 +1957,14 @@ document.addEventListener('DOMContentLoaded', () => {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(review)
-        }).catch(() => {});
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            console.log('[Reviews API] Review tersimpan ke Google Sheet.');
+          })
+          .catch((err) => {
+            console.error('[Reviews API] Gagal menyimpan review ke Google Sheet:', err);
+          });
       }
 
       // Also notify the site owner by email as a backup.

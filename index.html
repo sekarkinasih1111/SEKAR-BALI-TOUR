@@ -372,6 +372,14 @@ html[data-lang="id"] .lang-id{ display:revert; }
 .retreat-philosophy{ max-width:680px; margin:56px auto 0; text-align:center; padding-top:36px; border-top:1px solid var(--line-dark); }
 .retreat-philosophy p{ font-family:'Fraunces',serif; font-style:italic; font-size:clamp(18px,2.2vw,24px); line-height:1.6; color:var(--brass-light); }
 
+.retreat-slots{
+  position:relative; z-index:2; display:inline-flex; align-items:center; gap:9px;
+  margin-top:18px; padding:9px 18px; border-radius:999px;
+  border:1px solid rgba(198,161,91,0.4); background:rgba(198,161,91,0.09);
+  font-size:12.5px; font-weight:600; letter-spacing:0.3px; color:var(--brass-light);
+}
+.retreat-slots::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--brass-light); flex-shrink:0; }
+
 .retreat-price-box{
   position:relative; z-index:2; margin-top:34px; padding:26px 28px;
   background:rgba(18,22,31,0.55); border:1px solid var(--line-dark); border-radius:var(--radius-md);
@@ -1440,6 +1448,11 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
         <span class="lang-en">The signature multi-day experience of Sekar SoulPath, a carefully curated journey through sacred springs, temples, cultural landscapes, traditional villages, meaningful conversations, and peaceful natural places, moving through purification, ancestral wisdom, and soul mapping across three unhurried days. Each moment is designed to encourage you to slow down, observe, listen, reflect, and appreciate Bali beyond its famous attractions, focusing less on sightseeing and more on a gradual entry into the rhythm of Balinese life.</span>
         <span class="lang-id">Pengalaman multi-hari andalan Sekar SoulPath, perjalanan yang disusun dengan saksama melalui mata air suci, pura, lanskap budaya, desa tradisional, percakapan bermakna, dan tempat-tempat alam yang tenang, melewati penyucian diri, kearifan leluhur, dan pemetaan jiwa dalam tiga hari yang tak tergesa. Setiap momen dirancang untuk mengajak Anda melambat, mengamati, mendengarkan, merenung, dan menghargai Bali di luar atraksi populernya, bukan sekadar berwisata, melainkan perlahan memasuki ritme kehidupan Bali.</span>
       </p>
+
+      <div class="retreat-slots">
+        <span class="lang-en">Limited to 15 groups per week</span>
+        <span class="lang-id">Terbatas hanya 15 grup per minggu</span>
+      </div>
 
       <div class="retreat-price-box">
         <div class="rp-label">

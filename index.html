@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sekar Bali Tour for an Authentic Bali Experience</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE2IiBmaWxsPSIjMTIxNjFGIi8+CjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0UwQzY4OCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPgo8cGF0aCBkPSJNMzIgMTZjOSA4IDkgMTcgMCAyNi05LTktOS0xOCAwLTI2WiIvPgo8cGF0aCBkPSJNMTYgMzJjOC05IDE3LTkgMjYgMC05IDktMTggOS0yNiAwWiIvPgo8L2c+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjMuNCIgZmlsbD0iI0M2QTE1QiIvPgo8L3N2Zz4=">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE2IiBmaWxsPSIjMTIxNjFGIi8+CjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0UwQzY4OCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiPgo8cGF0aCBkPSJNMzIgMTZjOSA4IDkgMTcgMCAyNi05LTktOS0xOCAwLTI2WiIvPgo8cGF0aCBkPSJNMTYgMzJjOC05IDE3LTkgMjYgMC05IDktMTggOS0yNiAwWiIvPgo8L2c+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjMuNCIgZmlsbD0iI0M2QTE1QiIvPgo8L3N2Zz4=">
+<meta name="theme-color" content="#12161F">
 <meta name="description" content="Sekar Bali Tour offers Authentic Bali Tours &amp; Culture, deepened by Sekar SoulPath. More than a holiday, it is a journey that touches nature, culture, and the soul.">
 <meta name="keywords" content="Bali tour, private tour Bali, Kintamani tour, Ubud tour, Nusa Penida, Mount Batur sunrise, melukat, Balinese temple experience, authentic Bali experience">
 <link rel="canonical" href="https://sekarsoulbaliexperience.pages.dev/">
@@ -182,6 +185,7 @@ nav{ display:flex; align-items:center; justify-content:space-between; gap:24px; 
 .menu-btn{
   display:none; width:42px; height:42px; border-radius:50%; border:1px solid var(--line-dark);
   background:transparent; align-items:center; justify-content:center; flex-direction:column; gap:4px;
+  cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
 }
 .menu-btn span{ width:16px; height:1.5px; background:var(--cream-text); display:block; transition:transform .3s ease, opacity .3s ease; }
 
@@ -309,7 +313,7 @@ nav{ display:flex; align-items:center; justify-content:space-between; gap:24px; 
 .sig-row:last-child{ border-bottom:1px solid var(--line-dark); }
 .sig-glyph{ width:44px; height:44px; }
 .sig-row h3{ font-size:26px; color:var(--cream-text); }
-.sig-row .num{ font-family:'Fraunces',serif; font-style:italic; font-size:14px; color:var(--brass-deep); display:block; margin-bottom:6px; }
+.sig-row .num, .num{ font-family:'Fraunces',serif; font-style:italic; font-size:14px; color:var(--brass-deep); display:block; margin-bottom:6px; position:relative; z-index:2; }
 .sig-row p{ font-size:15px; color:var(--cream-dim); max-width:480px; }
 @media(max-width:860px){
   .sig-row{ grid-template-columns:48px 1fr; row-gap:12px; }
@@ -638,6 +642,7 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
         <a href="#top"><span class="lang-en">Home</span><span class="lang-id">Beranda</span></a>
         <a href="#tours"><span class="lang-en">Bali Tours</span><span class="lang-id">Tur Bali</span></a>
         <a href="#experiences"><span class="lang-en">Signature Experiences</span><span class="lang-id">Pengalaman Khas</span></a>
+        <a href="#one-day-tour"><span class="lang-en">One Day Tour</span><span class="lang-id">Tur Satu Hari</span></a>
         <a href="#retreat"><span class="lang-en">3-Day Retreat</span><span class="lang-id">Retret 3 Hari</span></a>
         <a href="#gallery"><span class="lang-en">Gallery</span><span class="lang-id">Galeri</span></a>
         <a href="#about"><span class="lang-en">About</span><span class="lang-id">Tentang Kami</span></a>
@@ -664,6 +669,7 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
   <a href="#top"><span class="lang-en">Home</span><span class="lang-id">Beranda</span></a>
   <a href="#tours"><span class="lang-en">Bali Tours</span><span class="lang-id">Tur Bali</span></a>
   <a href="#experiences"><span class="lang-en">Signature Experiences</span><span class="lang-id">Pengalaman Khas</span></a>
+  <a href="#one-day-tour"><span class="lang-en">One Day Tour</span><span class="lang-id">Tur Satu Hari</span></a>
   <a href="#retreat"><span class="lang-en">3-Day Retreat</span><span class="lang-id">Retret 3 Hari</span></a>
   <a href="#gallery"><span class="lang-en">Gallery</span><span class="lang-id">Galeri</span></a>
   <a href="#about"><span class="lang-en">About</span><span class="lang-id">Tentang Kami</span></a>
@@ -1085,24 +1091,6 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
         </p>
       </div>
       <div class="sig-row reveal">
-        <svg class="sig-glyph" viewBox="0 0 44 44" fill="none"><path d="M22 6c6 6 10 12 10 18a10 10 0 01-20 0c0-6 4-12 10-18Z" stroke="#E0C688" stroke-width="1.4"/><circle cx="22" cy="26" r="3" stroke="#E0C688" stroke-width="1.2"/></svg>
-        <div>
-          <span class="num">
-            <span class="lang-en">Purified · Illuminated · Mapped</span>
-            <span class="lang-id">Disucikan · Dicerahkan · Dipetakan</span>
-          </span>
-          <h3><span class="lang-en">Melukat, Temple &amp; Prana Sangkala</span><span class="lang-id">Melukat, Pura &amp; Prana Sangkala</span></h3>
-        </div>
-        <p>
-          <span class="lang-en">A single day, three thresholds. It begins at a sacred spring, where the water still carries the same intention it has held for generations, then moves to a temple that has never stopped being lived in, its offerings placed daily, its customs unchanged. The day settles at a traditional coffee house, where you first wander at your own pace, watching how Balinese coffee and other authentic traditional drinks are still made by hand, the roasting, the grinding, the quiet craft behind every cup. Only once you've browsed and tasted does the reading begin: a personal Prana Sangkala session over a cup of authentic Balinese coffee, tracing the rhythms and patterns that shaped you long before this day began. Purified, illuminated, mapped, not three separate stops, but one continuous thread from body to place to self.</span>
-          <span class="lang-id">Satu hari, tiga ambang. Dimulai di mata air suci, tempat air masih membawa niat yang sama seperti yang dijaga selama beberapa generasi, kemudian berlanjut ke pura yang tak pernah berhenti dihidupi, sesajennya masih diletakkan setiap hari, adatnya tetap terjaga. Hari ini kemudian mengendap di sebuah kedai kopi tradisional, tempat Anda lebih dulu berkeliling dengan santai, menyaksikan bagaimana kopi Bali dan minuman tradisional otentik lainnya masih dibuat dengan tangan, mulai dari proses sangrai, penggilingan, hingga ketekunan diam-diam di balik setiap cangkir. Barulah setelah puas melihat-lihat dan mencicipi, sesi pembacaan dimulai: Prana Sangkala pribadi ditemani secangkir kopi Bali otentik, menelusuri ritme dan pola yang membentuk Anda jauh sebelum hari ini dimulai. Disucikan, dicerahkan, dipetakan, bukan tiga perhentian yang terpisah, melainkan satu benang yang menyambung dari tubuh, ke tempat, hingga ke diri.</span>
-        </p>
-        <p class="soul-portal">
-          <span class="lang-en">A gentle beginning for those about to step into the full three-day Sacred Bali Soul Journey, or a complete journey of its own for those without three days to give. Either way, it stands on its own, its own itinerary, its own rhythm, not a preview, but a day worth completing in full.</span>
-          <span class="lang-id">Sebuah permulaan yang lembut bagi mereka yang akan memasuki Sacred Bali Soul Journey selama tiga hari penuh, atau perjalanan yang utuh tersendiri bagi mereka yang tak punya waktu tiga hari. Bagaimanapun, ia berdiri sendiri, dengan alur dan ritmenya sendiri, bukan sekadar pratinjau, melainkan satu hari yang layak dijalani secara penuh.</span>
-        </p>
-      </div>
-      <div class="sig-row reveal">
         <svg class="sig-glyph" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="15" stroke="#A9BFAE" stroke-width="1.4"/><path d="M22 10v6M22 28v6M10 22h6M28 22h6" stroke="#A9BFAE" stroke-width="1.4"/></svg>
         <h3><span class="lang-en">Prana Sangkala Reading</span><span class="lang-id">Pembacaan Prana Sangkala</span></h3>
         <div class="sig-copy">
@@ -1467,6 +1455,53 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
 
 
 <!-- ============================================================
+     ONE DAY TOUR: Melukat, Temple & Prana Sangkala (bilingual: EN / ID)
+============================================================ -->
+<section id="one-day-tour" class="on-dark">
+  <div class="wrap">
+    <div class="retreat-hero reveal">
+      <p class="eyebrow">
+        <svg class="glyph" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#E0C688"/></svg>
+        <span class="lang-en">One Day Tour</span>
+        <span class="lang-id">Tur Satu Hari</span>
+      </p>
+
+      <span class="num">
+        <span class="lang-en">Purified · Illuminated · Mapped</span>
+        <span class="lang-id">Disucikan · Dicerahkan · Dipetakan</span>
+      </span>
+      <h2 class="retreat-title">
+        <span class="lang-en">Melukat, Temple &amp; Prana Sangkala</span>
+        <span class="lang-id">Melukat, Pura &amp; Prana Sangkala</span>
+      </h2>
+      <p class="retreat-subtitle">
+        <span class="lang-en">A single day, three thresholds. It begins at a sacred spring, where the water still carries the same intention it has held for generations, then moves to a temple that has never stopped being lived in, its offerings placed daily, its customs unchanged. The day settles at a traditional coffee house, where you first wander at your own pace, watching how Balinese coffee and other authentic traditional drinks are still made by hand, the roasting, the grinding, the quiet craft behind every cup. Only once you've browsed and tasted does the reading begin: a personal Prana Sangkala session over a cup of authentic Balinese coffee, tracing the rhythms and patterns that shaped you long before this day began. Purified, illuminated, mapped, not three separate stops, but one continuous thread from body to place to self.</span>
+        <span class="lang-id">Satu hari, tiga ambang. Dimulai di mata air suci, tempat air masih membawa niat yang sama seperti yang dijaga selama beberapa generasi, kemudian berlanjut ke pura yang tak pernah berhenti dihidupi, sesajennya masih diletakkan setiap hari, adatnya tetap terjaga. Hari ini kemudian mengendap di sebuah kedai kopi tradisional, tempat Anda lebih dulu berkeliling dengan santai, menyaksikan bagaimana kopi Bali dan minuman tradisional otentik lainnya masih dibuat dengan tangan, mulai dari proses sangrai, penggilingan, hingga ketekunan diam-diam di balik setiap cangkir. Barulah setelah puas melihat-lihat dan mencicipi, sesi pembacaan dimulai: Prana Sangkala pribadi ditemani secangkir kopi Bali otentik, menelusuri ritme dan pola yang membentuk Anda jauh sebelum hari ini dimulai. Disucikan, dicerahkan, dipetakan, bukan tiga perhentian yang terpisah, melainkan satu benang yang menyambung dari tubuh, ke tempat, hingga ke diri.</span>
+      </p>
+
+      <ul class="retreat-checklist">
+        <li><span class="lang-en">Sacred Melukat</span><span class="lang-id">Melukat Suci</span></li>
+        <li><span class="lang-en">Living Temple Visit</span><span class="lang-id">Kunjungan Pura yang Hidup</span></li>
+        <li><span class="lang-en">Traditional Coffee House</span><span class="lang-id">Kedai Kopi Tradisional</span></li>
+        <li><span class="lang-en">Personal Prana Sangkala Reading</span><span class="lang-id">Pembacaan Prana Sangkala Pribadi</span></li>
+      </ul>
+
+      <p style="margin-top:20px; font-size:14px; font-style:italic; line-height:1.7; color:var(--cream-dim); position:relative; z-index:2; max-width:600px;">
+        <span class="lang-en">A gentle beginning for those about to step into the full three-day Sacred Bali Soul Journey, or a complete journey of its own for those without three days to give. Either way, it stands on its own, its own itinerary, its own rhythm, not a preview, but a day worth completing in full.</span>
+        <span class="lang-id">Sebuah permulaan yang lembut bagi mereka yang akan memasuki Sacred Bali Soul Journey selama tiga hari penuh, atau perjalanan yang utuh tersendiri bagi mereka yang tak punya waktu tiga hari. Bagaimanapun, ia berdiri sendiri, dengan alur dan ritmenya sendiri, bukan sekadar pratinjau, melainkan satu hari yang layak dijalani secara penuh.</span>
+      </p>
+
+      <div class="retreat-cta">
+        <a class="btn btn-brass" href="https://wa.me/6289616673334?text=Halo%20Sekar%2C%20saya%20ingin%20bertanya%20tentang%20One%20Day%20Tour%20(Melukat%2C%20Temple%20%26%20Prana%20Sangkala)." target="_blank" rel="noopener">
+          <span class="lang-en">✦ Inquire About This Day</span>
+          <span class="lang-id">✦ Tanyakan Tur Ini</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
      SACRED BALI SOUL JOURNEY: 3-Day Retreat (bilingual: EN / ID)
 ============================================================ -->
 <section id="retreat" class="on-dark">
@@ -1494,8 +1529,8 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
       </div>
 
       <p style="margin-top:14px; font-size:13.5px; font-style:italic; color:var(--cream-dim); position:relative; z-index:2;">
-        <span class="lang-en">Only have one day to give? Begin instead with <a href="#experiences" style="color:var(--brass-light); border-bottom:1px solid rgba(224,198,136,0.45);">Melukat, Temple &amp; Prana Sangkala</a>, a complete day of its own.</span>
-        <span class="lang-id">Hanya punya waktu satu hari? Mulailah dengan <a href="#experiences" style="color:var(--brass-light); border-bottom:1px solid rgba(224,198,136,0.45);">Melukat, Pura &amp; Prana Sangkala</a>, satu hari yang utuh tersendiri.</span>
+        <span class="lang-en">Only have one day to give? Begin instead with <a href="#one-day-tour" style="color:var(--brass-light); border-bottom:1px solid rgba(224,198,136,0.45);">Melukat, Temple &amp; Prana Sangkala</a>, a complete day of its own.</span>
+        <span class="lang-id">Hanya punya waktu satu hari? Mulailah dengan <a href="#one-day-tour" style="color:var(--brass-light); border-bottom:1px solid rgba(224,198,136,0.45);">Melukat, Pura &amp; Prana Sangkala</a>, satu hari yang utuh tersendiri.</span>
       </p>
 
       <div class="retreat-price-box">
@@ -1755,6 +1790,7 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
         <h5><span class="lang-en">Explore</span><span class="lang-id">Jelajahi</span></h5>
         <a href="#tours"><span class="lang-en">Bali Tours</span><span class="lang-id">Tur Bali</span></a>
         <a href="#experiences"><span class="lang-en">Signature Experiences</span><span class="lang-id">Pengalaman Khas</span></a>
+        <a href="#one-day-tour"><span class="lang-en">One Day Tour</span><span class="lang-id">Tur Satu Hari</span></a>
         <a href="#retreat"><span class="lang-en">3-Day Retreat</span><span class="lang-id">Retret 3 Hari</span></a>
         <a href="#gallery"><span class="lang-en">Gallery</span><span class="lang-id">Galeri</span></a>
         <a href="#about"><span class="lang-en">About</span><span class="lang-id">Tentang Kami</span></a>

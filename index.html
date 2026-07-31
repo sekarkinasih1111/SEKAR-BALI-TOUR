@@ -1517,7 +1517,7 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
       </p>
 
       <div class="retreat-cta">
-        <a class="btn btn-brass" href="https://wa.me/6289616673334?text=Halo%20Sekar%2C%20saya%20ingin%20bertanya%20tentang%20One%20Day%20Tour%20(Melukat%2C%20Temple%20%26%20Prana%20Sangkala)." target="_blank" rel="noopener">
+        <a class="btn btn-brass wa-lang-link" data-wa-en="Hello Sekar, I'd like to ask about the One Day Tour (Melukat, Temple &amp; Prana Sangkala)." data-wa-id="Halo Sekar, saya ingin bertanya tentang One Day Tour (Melukat, Temple &amp; Prana Sangkala)." href="https://wa.me/6289616673334?text=Halo%20Sekar%2C%20saya%20ingin%20bertanya%20tentang%20One%20Day%20Tour%20(Melukat%2C%20Temple%20%26%20Prana%20Sangkala)." target="_blank" rel="noopener">
           <span class="lang-en">✦ Inquire About This Day</span>
           <span class="lang-id">✦ Tanyakan Tur Ini</span>
         </a>
@@ -1591,7 +1591,7 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
       </div>
 
       <div class="retreat-cta">
-        <a class="btn btn-brass" href="https://wa.me/6289616673334?text=Halo%20Sekar%2C%20saya%20ingin%20mengajukan%20diri%20(apply)%20untuk%20Sacred%20Bali%20Soul%20Journey.%20Bolehkah%20saya%20memulai%20proses%20wawancara%20kelayakan%3F" target="_blank" rel="noopener">
+        <a class="btn btn-brass wa-lang-link" data-wa-en="Hello Sekar, I'd like to apply for the Sacred Bali Soul Journey. Could I begin the eligibility interview process?" data-wa-id="Halo Sekar, saya ingin mengajukan diri (apply) untuk Sacred Bali Soul Journey. Bolehkah saya memulai proses wawancara kelayakan?" href="https://wa.me/6289616673334?text=Halo%20Sekar%2C%20saya%20ingin%20mengajukan%20diri%20(apply)%20untuk%20Sacred%20Bali%20Soul%20Journey.%20Bolehkah%20saya%20memulai%20proses%20wawancara%20kelayakan%3F" target="_blank" rel="noopener">
           <span class="lang-en">✦ Apply for Journey (Eligibility Interview)</span>
           <span class="lang-id">✦ Daftar untuk Perjalanan Ini (Wawancara Kelayakan)</span>
         </a>
@@ -1990,10 +1990,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function startAutoplay() {
     stopAutoplay();
-    testiTimer = setInterval(() => showTesti(testiIndex + 1), 6000);
+    testiTimer = setInterval(() => showTesti(testiIndex + 1), 9000);
   }
   function stopAutoplay() {
     if (testiTimer) clearInterval(testiTimer);
+  }
+
+  // Pause the slider the moment someone is actually reading/interacting with
+  // it (hover, touch, or keyboard focus), and only resume a little while
+  // after they leave it alone, so a testimonial never shifts mid-read.
+  if (testiWrap) {
+    let resumeTimer = null;
+    const pauseForReading = () => {
+      stopAutoplay();
+      if (resumeTimer) clearTimeout(resumeTimer);
+    };
+    const scheduleResume = () => {
+      if (resumeTimer) clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(startAutoplay, 2000);
+    };
+    testiWrap.addEventListener('mouseenter', pauseForReading);
+    testiWrap.addEventListener('mouseleave', scheduleResume);
+    testiWrap.addEventListener('touchstart', pauseForReading, { passive: true });
+    testiWrap.addEventListener('touchend', scheduleResume);
+    testiWrap.addEventListener('focusin', pauseForReading);
+    testiWrap.addEventListener('focusout', scheduleResume);
   }
 
   function wireDot(dot, index) {
@@ -2152,10 +2173,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------------- Site-wide language toggle (EN / ID) ---------------- */
   const langBtns = document.querySelectorAll('.lang-btn');
+  const waLangLinks = document.querySelectorAll('.wa-lang-link');
+  function updateWaLinks(lang) {
+    waLangLinks.forEach((link) => {
+      const base = link.getAttribute('href').split('?')[0];
+      const msg = lang === 'id' ? link.getAttribute('data-wa-id') : link.getAttribute('data-wa-en');
+      if (msg) link.setAttribute('href', base + '?text=' + encodeURIComponent(msg));
+    });
+  }
   function setLang(lang) {
     document.documentElement.setAttribute('data-lang', lang);
     document.documentElement.setAttribute('lang', lang);
     langBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-lang-btn') === lang));
+    updateWaLinks(lang);
     try { localStorage.setItem('sekarsoul-lang', lang); } catch (e) {}
   }
   if (langBtns.length) {
@@ -2164,7 +2194,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     let savedLang = null;
     try { savedLang = localStorage.getItem('sekarsoul-lang'); } catch (e) {}
-    if (savedLang === 'id' || savedLang === 'en') setLang(savedLang);
+    if (savedLang === 'id' || savedLang === 'en') {
+      setLang(savedLang);
+    } else {
+      updateWaLinks(document.documentElement.getAttribute('data-lang') === 'id' ? 'id' : 'en');
+    }
+  } else {
+    updateWaLinks('en');
   }
 
   /* ---------------- Contact form (front-end only) ---------------- */

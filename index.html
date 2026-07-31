@@ -409,10 +409,12 @@ html[data-lang="id"] .lang-id{ display:revert; }
 
 .host-layout{ display:grid; grid-template-columns:260px 1fr; gap:48px; align-items:start; margin-top:10px; }
 .host-photo-wrap{ position:relative; position:sticky; top:110px; width:100%; }
-.host-photo-wrap::before{ content:""; display:block; padding-top:100%; }
+/* Matches the photo's own portrait ratio (900x1600) instead of forcing
+   a square crop, so Sekar & Nyoman aren't cut off on any screen size. */
+.host-photo-wrap::before{ content:""; display:block; padding-top:177.78%; }
 .host-photo-wrap img{
   position:absolute; inset:0; width:100%; height:100%;
-  object-fit:cover; object-position:center 25%;
+  object-fit:cover; object-position:center 15%;
   border-radius:var(--radius-lg); display:block;
   box-shadow:0 24px 50px rgba(35,39,31,0.22), 0 0 0 1px rgba(198,161,91,0.25);
 }
@@ -420,7 +422,7 @@ html[data-lang="id"] .lang-id{ display:revert; }
   content:""; position:absolute; inset:-14px; z-index:-1; border-radius:calc(var(--radius-lg) + 14px);
   border:1px solid rgba(198,161,91,0.3);
 }
-@media(max-width:860px){ .host-layout{ grid-template-columns:1fr; } .host-photo-wrap{ max-width:260px; margin:0 auto; position:static; } }
+@media(max-width:860px){ .host-layout{ grid-template-columns:1fr; } .host-photo-wrap{ max-width:280px; margin:0 auto; position:static; } }
 
 .retreat-days{ margin-top:60px; display:flex; flex-direction:column; gap:1px; background:var(--line-light); border-radius:var(--radius-lg); overflow:hidden; }
 .retreat-day{
@@ -1844,6 +1846,44 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ---------------- Scroll reveal ----------------
+     Runs first and is wrapped defensively so a problem anywhere else
+     on the page (slow network, a form/API hiccup, a quirky mobile
+     browser, etc.) can never leave sections stuck invisible. A timed
+     fallback also force-reveals anything the observer misses. */
+  try {
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealNow = (el) => el.classList.add('in');
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            revealNow(entry.target);
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+      revealEls.forEach(el => io.observe(el));
+
+      // Safety net: some mobile browsers (in-app webviews, low-power
+      // mode, very tall sections like the gallery) can fail to fire an
+      // intersection in time. Force everything visible after a short
+      // delay so nothing stays hidden.
+      window.setTimeout(() => {
+        revealEls.forEach(el => {
+          if (!el.classList.contains('in')) revealNow(el);
+        });
+      }, 2000);
+    } else {
+      revealEls.forEach(revealNow);
+    }
+  } catch (err) {
+    // If anything above fails for any reason, don't let content stay
+    // hidden: reveal everything immediately.
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  }
+
   /* ---------------- Sticky nav ---------------- */
   const header = document.getElementById('siteHeader');
   const onScroll = () => header.classList.toggle('solid', window.scrollY > 40);
@@ -1865,22 +1905,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
       });
     });
-  }
-
-  /* ---------------- Scroll reveal ---------------- */
-  const revealEls = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealEls.forEach(el => io.observe(el));
-  } else {
-    revealEls.forEach(el => el.classList.add('in'));
   }
 
   /* ---------------- Testimonial slider ---------------- */

@@ -552,12 +552,15 @@ html[data-lang="id"] .lang-id{ display:revert; }
   color:var(--ink-dim); margin-bottom:7px; font-weight:600;
 }
 .review-form-wrap .form-field input,
+.review-form-wrap .form-field select,
 .review-form-wrap .form-field textarea{
   width:100%; padding:13px 15px; border-radius:var(--radius-sm);
   border:1px solid var(--line-light); background:#fff; color:var(--ink);
   font-size:14.5px; transition:border-color .3s ease;
 }
+.review-form-wrap .form-field select{ appearance:auto; cursor:pointer; }
 .review-form-wrap .form-field input:focus,
+.review-form-wrap .form-field select:focus,
 .review-form-wrap .form-field textarea:focus{ outline:none; border-color:var(--brass); }
 .review-form-wrap .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 @media(max-width:520px){ .review-form-wrap .form-row{ grid-template-columns:1fr; } }
@@ -1527,6 +1530,22 @@ footer{ background:var(--dusk-deep); color:var(--cream-text); padding:80px 0 30p
           </div>
         </div>
         <div class="form-field">
+          <label for="rTrip"><span class="lang-en">Which trip did you take?</span><span class="lang-id">Trip mana yang Anda ambil?</span></label>
+          <select id="rTrip" name="trip">
+            <option value="" data-en="Select a trip (optional)" data-id="Pilih trip (opsional)">Select a trip (optional)</option>
+            <option value="tour-batur-sunrise" data-en="Mount Batur Sunrise Trekking Experience" data-id="Trekking Matahari Terbit Gunung Batur">Mount Batur Sunrise Trekking Experience</option>
+            <option value="tour-batur-jeep" data-en="Mount Batur Jeep &amp; Sacred Water Experience" data-id="Mount Batur Jeep &amp; Sacred Water Experience">Mount Batur Jeep &amp; Sacred Water Experience</option>
+            <option value="tour-kintamani" data-en="Kintamani Experience" data-id="Kintamani Experience">Kintamani Experience</option>
+            <option value="tour-ubud" data-en="Ubud Experience" data-id="Ubud Experience">Ubud Experience</option>
+            <option value="tour-east-bali" data-en="East Bali Experience" data-id="East Bali Experience">East Bali Experience</option>
+            <option value="tour-nusa-penida" data-en="Nusa Penida Experience" data-id="Nusa Penida Experience">Nusa Penida Experience</option>
+            <option value="tour-black-lava-atv" data-en="Black Lava ATV &amp; Sacred Water Experience" data-id="Black Lava ATV &amp; Sacred Water Experience">Black Lava ATV &amp; Sacred Water Experience</option>
+            <option value="tour-sekumpul" data-en="Sekumpul Waterfall Experience" data-id="Sekumpul Waterfall Experience">Sekumpul Waterfall Experience</option>
+            <option value="tour-private-driver" data-en="Private Driver &amp; Local Host" data-id="Sopir Pribadi &amp; Local Host">Private Driver &amp; Local Host</option>
+            <option value="tour-your-bali-your-way" data-en="Your Bali, Your Way" data-id="Bali Anda, Cara Anda">Your Bali, Your Way</option>
+          </select>
+        </div>
+        <div class="form-field">
           <label><span class="lang-en">Rating</span><span class="lang-id">Rating</span></label>
           <div class="review-stars-input" id="reviewStarsInput">
             <button type="button" data-star="1" aria-label="1 star">★</button>
@@ -2182,6 +2201,23 @@ document.addEventListener('DOMContentLoaded', () => {
     return idScore > enScore ? 'id' : 'en';
   }
 
+  // Trip id -> display label (EN/ID), kept in sync with the <select id="rTrip">
+  // options in the review form. Used to render the "which trip" link on both
+  // visitor-submitted reviews (new ones with a trip picked) and, if the sheet
+  // ever gets a "trip" column filled in for older rows, on those too.
+  const TRIP_LABELS = {
+    'tour-batur-sunrise': { en: 'Mount Batur Sunrise Trekking Experience', id: 'Trekking Matahari Terbit Gunung Batur' },
+    'tour-batur-jeep': { en: 'Mount Batur Jeep & Sacred Water Experience', id: 'Mount Batur Jeep & Sacred Water Experience' },
+    'tour-kintamani': { en: 'Kintamani Experience', id: 'Kintamani Experience' },
+    'tour-ubud': { en: 'Ubud Experience', id: 'Ubud Experience' },
+    'tour-east-bali': { en: 'East Bali Experience', id: 'East Bali Experience' },
+    'tour-nusa-penida': { en: 'Nusa Penida Experience', id: 'Nusa Penida Experience' },
+    'tour-black-lava-atv': { en: 'Black Lava ATV & Sacred Water Experience', id: 'Black Lava ATV & Sacred Water Experience' },
+    'tour-sekumpul': { en: 'Sekumpul Waterfall Experience', id: 'Sekumpul Waterfall Experience' },
+    'tour-private-driver': { en: 'Private Driver & Local Host', id: 'Sopir Pribadi & Local Host' },
+    'tour-your-bali-your-way': { en: 'Your Bali, Your Way', id: 'Bali Anda, Cara Anda' }
+  };
+
   // Build a testimonial slide + matching dot for a visitor-submitted review,
   // insert them into the DOM, and return the new elements.
   function createReviewSlide(review) {
@@ -2189,6 +2225,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const langLabel = lang === 'id'
       ? '<span class="lang-en">Original in Indonesian</span><span class="lang-id">Ulasan asli Bahasa Indonesia</span>'
       : '<span class="lang-en">Original in English</span><span class="lang-id">Ulasan asli Bahasa Inggris</span>';
+    const tripInfo = review.trip && TRIP_LABELS[review.trip] ? TRIP_LABELS[review.trip] : null;
+    const tourLinkHtml = tripInfo
+      ? '<a class="testi-tour-link" href="#' + review.trip + '">' +
+          '<span class="lang-en">' + escapeHtml(tripInfo.en) + '</span>' +
+          '<span class="lang-id">' + escapeHtml(tripInfo.id) + '</span>' +
+          '<svg width="11" height="11" viewBox="0 0 14 14"><path d="M5 2 L10 7 L5 12" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>' +
+        '</a>'
+      : '';
     const slide = document.createElement('div');
     slide.className = 'testi-slide';
     slide.innerHTML =
@@ -2197,6 +2241,7 @@ document.addEventListener('DOMContentLoaded', () => {
       '<div class="testi-who">' + escapeHtml(review.name) +
         (review.country ? ' <span>' + escapeHtml(review.country) + '</span>' : '') +
       '</div>' +
+      tourLinkHtml +
       '<div class="testi-lang-badge">' + langLabel + '</div>';
     testiWrap.insertBefore(slide, testiNavEl);
 
@@ -2326,11 +2371,14 @@ document.addEventListener('DOMContentLoaded', () => {
     reviewForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const message = document.getElementById('rMessage').value.trim();
+      const tripSelect = document.getElementById('rTrip');
       const review = {
         name: document.getElementById('rName').value.trim() || 'Guest',
         country: document.getElementById('rCountry').value.trim(),
         rating: reviewRatingField.value,
         message: message,
+        trip: tripSelect ? tripSelect.value : '',
+        tripLabel: tripSelect && tripSelect.selectedIndex > 0 ? tripSelect.options[tripSelect.selectedIndex].text : '',
         lang: detectReviewLang(message),
         date: new Date().toISOString()
       };
@@ -2370,6 +2418,7 @@ document.addEventListener('DOMContentLoaded', () => {
           _subject: 'New Website Review: Sekar Bali Tour',
           name: review.name,
           country: review.country,
+          trip: review.tripLabel || '(not specified)',
           rating: review.rating + ' / 5',
           message: review.message
         })
@@ -2415,11 +2464,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (msg) link.setAttribute('href', base + '?text=' + encodeURIComponent(msg));
     });
   }
+  function updateTripSelectLang(lang) {
+    const tripSelect = document.getElementById('rTrip');
+    if (!tripSelect) return;
+    Array.from(tripSelect.options).forEach((opt) => {
+      const text = lang === 'id' ? opt.getAttribute('data-id') : opt.getAttribute('data-en');
+      if (text) opt.textContent = text;
+    });
+  }
   function setLang(lang) {
     document.documentElement.setAttribute('data-lang', lang);
     document.documentElement.setAttribute('lang', lang);
     langBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-lang-btn') === lang));
     updateWaLinks(lang);
+    updateTripSelectLang(lang);
     try { localStorage.setItem('sekarsoul-lang', lang); } catch (e) {}
   }
   if (langBtns.length) {

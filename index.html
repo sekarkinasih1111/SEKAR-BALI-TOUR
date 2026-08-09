@@ -2162,10 +2162,27 @@ document.addEventListener('DOMContentLoaded', () => {
       menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
-    mobilePanel.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
+    mobilePanel.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const targetId = link.getAttribute('href').slice(1);
+        const targetEl = document.getElementById(targetId);
+
+        // Close the panel and restore scrolling first. On many mobile
+        // browsers, toggling body overflow at the exact moment the
+        // native #hash jump fires resets the scroll position to the
+        // top, so the page appears to "always go back to the initial
+        // view" instead of landing on the section. Doing it ourselves,
+        // after the panel is closed, avoids that race.
+        e.preventDefault();
         mobilePanel.classList.remove('open');
         document.body.style.overflow = '';
+
+        if (targetEl) {
+          window.setTimeout(() => {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.pushState(null, '', '#' + targetId);
+          }, 260);
+        }
       });
     });
   }

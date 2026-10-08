@@ -204,6 +204,10 @@ if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3){show(idx+(dx<0?1:-1),dx<0?1:-
 }catch(e){}})();</script><script id="bk-js">(function(){try{
 /* ---- settings you may change ---- */
 var CAR_FEE=17;          /* USD per car, pick-up outside Ubud & Kintamani */
+var USD_IDR=17900;       /* FALLBACK rupiah per 1 USD, used only if the live rate cannot be loaded */
+var RATE_MARGIN=0.01;    /* extra safety margin on the live rate, 0.01 = +1% */
+var RATE_LIVE=false,RATE_TRIED=false;
+var IDR_ROUND=5000;      /* rupiah estimate is rounded UP to the nearest this amount */
 var CAR_CAPACITY=6;      /* guests per car */
 var MAX_GUESTS=10;
 var WA_NUMBER="6289616673334";
@@ -215,6 +219,11 @@ function L(en,id){return '<span class="lang-en">'+en+'</span><span class="lang-i
 function T(en,id){return lang()==="id"?id:en}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function money(n){return "$"+(Math.round(n*100)/100).toString().replace(/\.0+$/,"")}
+function getJson(u){return new Promise(function(res,rej){var t=setTimeout(function(){rej(new Error("timeout"))},5000);fetch(u).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(function(j){clearTimeout(t);res(j)}).catch(function(e){clearTimeout(t);rej(e)})})}
+function okRate(r){if(!(r>10000&&r<30000))throw new Error("bad rate");return r}
+function loadRate(){if(RATE_TRIED)return;RATE_TRIED=true;
+getJson("https://open.er-api.com/v6/latest/USD").then(function(j){return okRate(j&&j.rates&&j.rates.IDR)}).catch(function(){return getJson("https://api.frankfurter.dev/v1/latest?base=USD&symbols=IDR").then(function(j){return okRate(j&&j.rates&&j.rates.IDR)})}).then(function(r){USD_IDR=Math.round(r*(1+RATE_MARGIN));RATE_LIVE=true;if(isOpen)render()}).catch(function(){})}
+function idr(n){var v=Math.ceil(n*USD_IDR/IDR_ROUND)*IDR_ROUND;return "Rp "+String(v).replace(/\B(?=(\d{3})+(?!\d))/g,".")}
 /* collect bookable trips from the cards */
 function trips(){var out=[];document.querySelectorAll(".tour-card[id]").forEach(function(c){
 if(c.hasAttribute("data-bk-times")){var h2=c.querySelector("h3"),e2=h2.querySelector(".lang-en"),i2=h2.querySelector(".lang-id");
@@ -253,8 +262,8 @@ el.innerHTML=
 '<div class="bk-f"><label for="bkWa">WhatsApp</label><input type="tel" id="bkWa" name="whatsapp" required autocomplete="tel" placeholder="+62 ..."></div></div>'+
 '<div class="bk-f"><label for="bkEmail">Email <span style="text-transform:none;letter-spacing:0;font-weight:400">'+L("(optional)","(opsional)")+'</span></label><input type="email" id="bkEmail" name="email" autocomplete="email"></div>'+
 '<div class="bk-f"><label for="bkMsg">'+L("Notes","Catatan")+' <span style="text-transform:none;letter-spacing:0;font-weight:400">'+L("(optional)","(opsional)")+'</span></label><textarea id="bkMsg" name="message" rows="2" maxlength="600"></textarea></div>'+
-'<div class="bk-sum" aria-live="polite"><div id="bkLines"></div><div class="bk-total"><span>'+L("Estimated total","Perkiraan total")+'</span><b id="bkTotal"></b></div>'+
-'<p class="bk-hint">'+L("Includes a local guide and hotel transfer. Meals such as lunch and dinner are not included. This is a booking request, not a payment. We will confirm availability and the final price with you on WhatsApp.","Sudah termasuk pemandu lokal dan transfer hotel. Makanan seperti makan siang dan makan malam tidak termasuk. Ini permintaan pemesanan, bukan pembayaran. Kami akan mengonfirmasi ketersediaan dan harga akhir lewat WhatsApp.")+'</p></div>'+
+'<div class="bk-sum" aria-live="polite"><div id="bkLines"></div><div class="bk-total"><span>'+L("Estimated total","Perkiraan total")+'</span><b id="bkTotal"></b></div><div id="bkIdr" style="text-align:right;font-size:.9em;opacity:.85;margin-top:4px"></div>'+
+'<p class="bk-hint">'+L("Includes a local guide and hotel transfer. Meals such as lunch and dinner are not included. This is a booking request, not a payment. The rupiah amount is an estimate; the exchange rate is fixed when we confirm availability and the final price with you on WhatsApp.","Sudah termasuk pemandu lokal dan transfer hotel. Makanan seperti makan siang dan makan malam tidak termasuk. Ini permintaan pemesanan, bukan pembayaran. Nilai rupiah adalah perkiraan; kurs dikunci saat kami mengonfirmasi ketersediaan dan harga akhir lewat WhatsApp.")+'</p></div>'+
 '<div class="bk-err" id="bkErr" role="alert"></div>'+
 '<div class="bk-actions"><button type="submit" class="btn btn-brass" id="bkSend">'+L("Send Booking Request","Kirim Permintaan Booking")+'</button><button type="button" class="btn bk-wa" id="bkWaBtn">'+L("Send via WhatsApp","Kirim lewat WhatsApp")+'</button></div></form>'+
 '<div class="bk-done"><div class="tick">&#10003;</div><h3>'+L("Request sent","Permintaan terkirim")+'</h3><p id="bkDoneMsg"></p><a class="btn btn-brass" id="bkDoneWa" target="_blank" rel="noopener">'+L("Also message us on WhatsApp","Hubungi juga lewat WhatsApp")+'</a><button type="button" class="btn btn-outline-dark" id="bkDoneClose">'+L("Close","Tutup")+'</button></div></div>';
@@ -276,10 +285,10 @@ var l='';
 if(c.g===1)l+='<div class="bk-line"><span>'+L("1 guest","1 tamu")+'</span><b>'+money(tr.p1)+'</b></div>';
 else l+='<div class="bk-line"><span>'+L(c.g+" guests x "+money(tr.pg),c.g+" tamu x "+money(tr.pg))+'</span><b>'+money(c.base)+'</b></div>';
 if(c.out)l+='<div class="bk-line"><span>'+L("Pick-up outside area ("+c.cars+(c.cars>1?" cars":" car")+" x "+money(CAR_FEE)+")","Jemput di luar area ("+c.cars+" mobil x "+money(CAR_FEE)+")")+'</span><b>'+money(c.fee)+'</b></div>';
-$("bkLines").innerHTML=l;$("bkTotal").textContent=money(c.total)}
+$("bkLines").innerHTML=l;$("bkTotal").textContent=money(c.total);$("bkIdr").textContent="\u2248 "+idr(c.total)}
 function setTrip(id){for(var i=0;i<data.length;i++)if(data[i].id===id){cur=data[i];selT.selectedIndex=i;break}}
 function tomorrow(){var d=new Date();d.setDate(d.getDate()+1);var m=d.getMonth()+1,dd=d.getDate();return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(dd<10?"0":"")+dd}
-function open(id,op){data=trips();if(!data.length)return;selT.innerHTML=data.map(function(t){return"<option>"+esc(t.en)+"</option>"}).join("");
+function open(id,op){loadRate();data=trips();if(!data.length)return;selT.innerHTML=data.map(function(t){return"<option>"+esc(t.en)+"</option>"}).join("");
 setTrip(id);if(!cur){cur=data[0];selT.selectedIndex=0}
 dateI.min=tomorrow();err.className="bk-err";err.textContent="";[].forEach.call(form.querySelectorAll(".bk-bad"),function(x){x.classList.remove("bk-bad")});
 el.classList.remove("sent");opener=op;isOpen=true;render();el.classList.add("open");de.classList.add("bk-lock");
@@ -295,6 +304,7 @@ var rows=L2==="id"?[["Halo Sekar, saya ingin memesan trip:"],["Trip",tr.id_],["T
 if(tr.car){rows.push([L2==="id"?"Area jemput":"Pick-up area",area]);}
 var hotel=$("bkHotel").value.trim();if(hotel)rows.push([L2==="id"?"Lokasi jemput":"Pick-up location",hotel]);
 rows.push([L2==="id"?"Perkiraan total":"Estimated total","USD "+(Math.round(c.total*100)/100)+(c.fee?(L2==="id"?" (termasuk biaya jemput "+money(c.fee)+")":" (includes pick-up fee "+money(c.fee)+")"):"")]);
+rows.push([L2==="id"?"Perkiraan dalam rupiah":"Estimated in rupiah","\u2248 "+idr(c.total)+" ("+(L2==="id"?"kurs":"rate")+" 1 USD = Rp "+String(USD_IDR).replace(/\B(?=(\d{3})+(?!\d))/g,".")+")"]);
 rows.push([L2==="id"?"Nama":"Name",$("bkName").value.trim()]);
 var m=$("bkMsg").value.trim();if(m)rows.push([L2==="id"?"Catatan":"Notes",m]);
 return rows.map(function(r){return r.length===1?r[0]:r[0]+": "+r[1]}).join("\n")}
@@ -303,7 +313,7 @@ function send(e){e.preventDefault();if(!validate())return;var c=calc(),tr=cur,bt
 var fd=new FormData();fd.append("_subject","New Booking Request: "+tr.en+" ("+dateI.value+")");fd.append("_captcha","false");fd.append("_template","table");fd.append("_honey","");
 fd.append("trip",tr.en);fd.append("date",dateI.value);fd.append("guests",c.g);
 fd.append("pickup_area",tr.car?(c.out?"Outside Ubud & Kintamani (+"+money(c.fee)+", "+c.cars+" car)":"Ubud or Kintamani area"):(tr.id==="tour-nusa-penida"?"n/a (departs from Sanur)":"n/a"));
-fd.append("pickup_location",$("bkHotel").value.trim());fd.append("estimated_total_usd",Math.round(c.total*100)/100);
+fd.append("pickup_location",$("bkHotel").value.trim());fd.append("estimated_total_usd",Math.round(c.total*100)/100);fd.append("estimated_total_idr",idr(c.total));fd.append("usd_idr_rate",USD_IDR);fd.append("rate_source",RATE_LIVE?"live":"fixed fallback");
 fd.append("name",$("bkName").value.trim());fd.append("whatsapp",$("bkWa").value.trim());fd.append("email",$("bkEmail").value.trim()||"(none)");fd.append("message",$("bkMsg").value.trim()||"(none)");
 btn.disabled=true;btn.style.opacity=".6";
 fetch(ENDPOINT,{method:"POST",body:fd,headers:{Accept:"application/json"}}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json().catch(function(){return{}})}).then(function(){
